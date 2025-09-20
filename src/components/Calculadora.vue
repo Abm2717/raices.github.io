@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { biseccion, reglaFalsa } from './raicesFunciones'
+import { biseccion, reglaFalsa, valoresTabla } from './raicesFunciones'
 
 const limiteInferior = ref(0)
 const limiteSuperior = ref(1)
@@ -87,6 +87,7 @@ function obtenerRaices() {
       resultado = reglaFalsa(funcionAUsar, limiteInferior.value, limiteSuperior.value, errorMax.value)
     }
     
+    console.log(resultado)
     if (resultado.mensaje) {
       msjAlerta.value = resultado.mensaje
       mostrarAlerta.value = true
@@ -144,12 +145,12 @@ function obtenerRaices() {
       
       <div class="inputs-numericos">
         <label>
-          Límite inferior (a)
+          Valor de Xi
           <input type="number" v-model.number="limiteInferior" @keydown="bloquearTeclas" step="0.01" />
         </label>
         
         <label>
-          Límite superior (b)
+          Valor de Xf
           <input type="number" v-model.number="limiteSuperior" @keydown="bloquearTeclas" step="0.01" />
         </label>
         
@@ -177,7 +178,7 @@ function obtenerRaices() {
         <div class="stat-item raiz">
           <span class="stat-icon"></span>
           <span class="stat-label">Raíz encontrada</span>
-          <span class="stat-value">x = {{ resultados.raiz }}</span>
+          <span class="stat-value">{{ resultados.raiz }}</span>
         </div>
         
         <div class="stat-item funcion">
@@ -195,9 +196,38 @@ function obtenerRaices() {
         <div class="stat-item iteraciones">
           <span class="stat-icon"></span>
           <span class="stat-label">Iteraciones</span>
-          <span class="stat-value">{{ resultados.iteraciones.value }}</span>
+          <span class="stat-value">{{ resultados.iteraciones }}</span>
         </div>
       </div>
+    </div>
+    <div v-if="resultados && resultados.tabla" class="tabla-iteraciones">
+      <h3>Iteraciones</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>xi</th>
+            <th>xf</th>
+            <th>f(xi)</th>
+            <th>f(xf)</th>
+            <th>xr</th>
+            <th>f(xr)</th>
+            <th>f(xi)*f(xr)</th>
+            <th>ea</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(fila, index) in resultados.tabla" :key="index">
+            <td>{{ fila.xi }}</td>
+            <td>{{ fila.xf }}</td>
+            <td>{{ fila.fxi }}</td>
+            <td>{{ fila.fxf }}</td>
+            <td>{{ fila.xr }}</td>
+            <td>{{ fila.fxr }}</td>
+            <td>{{ fila.prod }}</td>
+            <td>{{ fila.ea }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -523,4 +553,34 @@ input[type="number"] {
     text-align: center;
   }
 }
+
+.tabla-iteraciones {
+  margin-top: 2rem;
+  overflow-x: auto;
+}
+
+.tabla-iteraciones table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  background: #1f1f1f;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.tabla-iteraciones th,
+.tabla-iteraciones td {
+  padding: 0.5rem;
+  border: 1px solid #333;
+}
+
+.tabla-iteraciones th {
+  background: #2563eb;
+  color: white;
+}
+
+.tabla-iteraciones tr:nth-child(even) {
+  background: #2d2d2d;
+}
+
 </style>

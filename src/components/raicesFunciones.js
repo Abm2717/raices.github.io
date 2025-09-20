@@ -1,42 +1,53 @@
+export let valoresTabla = [];
 
 export function biseccion(f, xi, xf, eamax) {
-    
+    valoresTabla.length = 0; 
     let fxi = f(xi);
     let fxf = f(xf);
     let xr, fxr, error;
-    let iteraciones = { value: 0 };
+    let iteraciones = 0;
     if (fxi * fxf > 0) {
         return { mensaje: "Intervalo invalido: no hay raiz en este rango." }
     }
     while (true) {
         xr = (xi + xf) / 2;
         fxr = f(xr);
+        let producto = fxi * fxr;
+        iteraciones++;
 
-        iteraciones.value++;
-
-        if (iteraciones.value > 1) {
+        if (iteraciones > 1) {
         error = Math.abs((xf - xi) / xr) * 100;
         } else {
         error = 100;
         }
+
+        valoresTabla.push({
+            xi: parseFloat(xi.toFixed(6)),
+            xf: parseFloat(xf.toFixed(6)),
+            xr: parseFloat(xr.toFixed(6)),
+            fxi: parseFloat(fxi.toFixed(6)),
+            fxr: parseFloat(fxr.toFixed(6)),
+            prod: parseFloat(producto.toFixed(6)),
+            ea: parseFloat(error.toFixed(6))
+        });
 
         if (error < eamax) {
         return {
             raiz: parseFloat(xr.toFixed(6)),
             f_raiz: parseFloat(fxr.toFixed(6)),
             error: parseFloat(error.toFixed(6)),
-            iteraciones: iteraciones
+            iteraciones: iteraciones,
+            tabla: valoresTabla
         };
         }
-
-        // POr si se va de mas
-        if (iteraciones.value >= 100) {
+        
+        if (iteraciones >= 100) {
         return {
             mensaje: "No se encontro la raiz en 100 iteraciones."
         };
         }
 
-        if (fxi * fxr < 0) {
+        if (producto < 0) {
         xf = xr;
         fxf = fxr;
         } else {
@@ -48,6 +59,7 @@ export function biseccion(f, xi, xf, eamax) {
 
 
 export function reglaFalsa(f, xi, xf, eamax) {
+    valoresTabla.length = 0;
     
     let fxi = f(xi);
     let fxf = f(xf);
@@ -62,7 +74,7 @@ export function reglaFalsa(f, xi, xf, eamax) {
 
         xr = (xi * fxf - xf * fxi) / (fxf - fxi);
         fxr = f(xr);
-
+        let producto = fxi * fxr;
         iteraciones++;
 
         if (iteraciones > 1) {
@@ -71,23 +83,34 @@ export function reglaFalsa(f, xi, xf, eamax) {
         error = 100; 
         }
 
+        valoresTabla.push({
+            xi: parseFloat(xi.toFixed(6)),
+            xf: parseFloat(xf.toFixed(6)),
+            fxi: parseFloat(fxi.toFixed(6)),
+            fxf: parseFloat(fxf.toFixed(6)),
+            xr: parseFloat(xr.toFixed(6)),
+            fxr: parseFloat(fxr.toFixed(6)),
+            prod: parseFloat(producto.toFixed(6)),
+            ea: parseFloat(error.toFixed(6))
+        });
+
         if (error < eamax) {
         return {
             raiz: parseFloat(xr.toFixed(6)),
             f_raiz: parseFloat(fxr.toFixed(6)),
             error: parseFloat(error.toFixed(6)),
-            iteraciones: iteraciones
+            iteraciones: iteraciones,
+            tabla: valoresTabla
         };
         }
-
-        //por si acaso
+ 
         if (iteraciones >= 100) {
         return {
             mensaje: "No se encontro la raiz en 100 iteraciones."
         };
         }
 
-        if (fxi * fxr < 0) {
+        if (producto < 0) {
         xf = xr;
         fxf = fxr;
         } else {
