@@ -77,16 +77,16 @@ describe('Método de Bisección', () => {
     } else {
       // Si encuentra la raíz, verificar que sea correcta
       expect(resultado.raiz).toBeCloseTo(0.5, 10)
-      expect(resultado.iteraciones.value).toBeLessThanOrEqual(100)
+      expect(resultado.iteraciones).toBeLessThanOrEqual(100)
     }
   })
 
   it('verifica que las iteraciones se cuentan correctamente', () => {
     const resultado = biseccion(f1, 0, 5, 0.1)
 
-    expect(resultado.iteraciones).toHaveProperty('value')
-    expect(resultado.iteraciones.value).toBeGreaterThan(0)
-    expect(resultado.iteraciones.value).toBeLessThan(20) // Para esta tolerancia debería ser menos
+    expect(resultado.iteraciones).toBeDefined()
+    expect(resultado.iteraciones).toBeGreaterThan(0)
+    expect(resultado.iteraciones).toBeLessThan(20) // Para esta tolerancia debería ser menos
   })
 })
 
@@ -172,7 +172,7 @@ describe('Método de Regla Falsa', () => {
     expect(Math.abs(resultadoBiseccion.raiz - resultadoReglaFalsa.raiz)).toBeLessThan(0.01)
     
     // Regla falsa generalmente converge más rápido
-    expect(resultadoReglaFalsa.iteraciones).toBeLessThanOrEqual(resultadoBiseccion.iteraciones.value)
+    expect(resultadoReglaFalsa.iteraciones).toBeLessThanOrEqual(resultadoBiseccion.iteraciones)
   })
 })
 
